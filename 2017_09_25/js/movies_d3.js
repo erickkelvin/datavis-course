@@ -1,3 +1,6 @@
+//Author: Erick Kelvin
+//Based on template by: Emanuele Santos
+
 //renders a chart
 function render(data, chartID, title, params, color) {
     let param = params[0];
