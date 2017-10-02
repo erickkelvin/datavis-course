@@ -2,7 +2,7 @@
 //Based on template by: Emanuele Santos
 
 //renders a chart
-function render(data, chartID, title, params, color) {
+function render(data, chartID, title, axisLabel, params, color) {
     let param = params[0];
     let label = "Film";
 
@@ -32,12 +32,13 @@ function render(data, chartID, title, params, color) {
     };
 
     //getting and setting sizes and scales
-    max = d3.max(data, function(d) { return +d[param];} );
-    let chartWidth = d3.select(chartID).node().getBoundingClientRect().width - 30;
-    let chartHeight = d3.select(chartID).node().getBoundingClientRect().height;
-    widthScale = d3.scaleLinear()
-                    .range([0, chartWidth])
-                    .domain([0, max]);
+    let max = d3.max(data, function(d) { return +d[param];} );
+    let chartWidth = d3.select(chartID).node().getBoundingClientRect().width - 60;
+    
+    let widthScale = d3.scaleLinear()
+                        .range([0, chartWidth])
+                        .domain([0, max]);
+    
 
     //showing chart title
     d3.select(chartID)
@@ -61,8 +62,18 @@ function render(data, chartID, title, params, color) {
             return widthScale(d[param]) + "px";
         })
         .select("span")
+            .style("padding-left", "10px")
             .text(function (d) {
                 return d[label];
+            });
+    
+    d3.select(chartID).selectAll("div.h-bar")
+    .append("span")
+            .style("float","right")
+            .style("margin-right",function(d) { if (max>1000) return "-32px"; else return "-35px"; })
+            .style("color","#000")
+            .text(function (d) {
+                return prettyPrint(max,d[param]);
             });
 
     //sorting chart
@@ -75,44 +86,76 @@ function render(data, chartID, title, params, color) {
         .append("svg")
             .attr("width", chartWidth)
             .attr("height", "10px")
-            .style("padding", "20px")
+            .style("padding", "1px 20px 20px 20px")
             .append("g")
                 .attr("class", "axis")
                 .call(d3.axisBottom()
                         .scale(widthScale)
                         .ticks(5)
-                        .tickFormat(function(d) { 
-                            if (max>1000) {
-                                return d / 1000 + " B";
-                            }
-                            else {
-                                return d + " M";
-                            }}));            
+                        .tickFormat(function (d) { return prettyPrint(max,d); }));
+    d3.select(chartID)
+        .append("span")
+            .append("text")
+                .style("font-size","12px")
+                .style("font-weight","bold")
+                .text(axisLabel + " ($)");
+    
+    let chartHeight = 35*d3.select(chartID).selectAll("div.h-bar").size() + 5;
+    let heightScale = d3.scalePoint()
+                        .range([0, chartHeight]);
+    
+    //drawing y axis
+    d3.select(chartID)
+        .append("svg")
+            .attr("width", "10px")
+            .attr("height", chartHeight)
+            .style("padding", "20px")
+            .style("float", "left")
+            .style("margin-top", -(chartHeight)-54)
+            .append("g")
+                .attr("class", "axis")
+                .call(d3.axisLeft()
+                        .scale(heightScale)
+                        .tickFormat(function (d) { return d[label]; }));
+    
+    
 }
 
+function prettyPrint(max,param) {
+    if (max>1000) {
+        return (param/1000).toFixed(1) + " B";
+    }
+    else {
+        return param + " M";
+    }
+}
 //renders all the charts
 function renderAll(error, json) {
     render(json,
            "#chart",
            "Filmes com maior bilheteria",
+           "Bilheteria",
            ["Worldwide_Gross_M"],
            "#0059b3"
     );
     render(json,
            "#chart2",
            "Filmes com maior orçamento",
+           "Orçamento",
            ["Budget_M"],
            "#862d2d"
     );
     render(json,
            "#chart3",
            "Filmes com maior lucro",
+           "Lucro",
            ["Worldwide_Gross_M","Budget_M","Profit", "minus"],
            "#008080"
     );
     render(json,
            "#chart4",
            "Gêneros com maior bilheteria",
+           "Bilheteria",
            ["Worldwide_Gross_M","Genre","GrossByGenre", "group-by"],
     );
 }
