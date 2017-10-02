@@ -100,7 +100,7 @@ function render(data, chartID, title, axisLabel, params, color) {
                 .style("font-weight","bold")
                 .text(axisLabel + " ($)");
     
-    let chartHeight = 35*d3.select(chartID).selectAll("div.h-bar").size() + 5;
+    /*let chartHeight = 35*d3.select(chartID).selectAll("div.h-bar").size() + 5;
     let heightScale = d3.scalePoint()
                         .range([0, chartHeight]);
     
@@ -116,7 +116,7 @@ function render(data, chartID, title, axisLabel, params, color) {
                 .attr("class", "axis")
                 .call(d3.axisLeft()
                         .scale(heightScale)
-                        .tickFormat(function (d) { return d[label]; }));
+                        .tickFormat(function (d) { return d[label]; }));*/
     
     
 }
