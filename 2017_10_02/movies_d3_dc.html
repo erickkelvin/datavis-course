@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Análise de Filmes com D3 e DC</title>
+    <link rel="stylesheet" href="css/dc.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/crossfilter.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="js/dc.js" charset="utf-8"></script>
+
+</head>
+<body>
+    <h1>Análise de Filmes</h1>
+    <div class="container">
+        <div id="chart" class="chart">
+            <h3>Bilheteria por ano</h3>
+        </div>
+        <div id="chart2" class="chart">
+            <h3>Bilheteria por gênero</h3>
+        </div>
+    </div>
+	<script type="text/javascript">
+    var barChart = dc.barChart('#chart');
+    var barChart2 = dc.barChart('#chart2');
+
+    d3.json("movies.json", function(data){
+        //criando um crossfilter
+        var facts = crossfilter(data);
+
+        var yearDim = facts.dimension(function(d){
+            return d.Year;
+        });
+
+        var grossByYearGroup = yearDim.group().reduceSum(function(d){
+            return d.Worldwide_Gross_M;
+        });
+
+        barChart.width(400)
+                .height(400)
+                .margins({top: 50, right: 15, bottom: 25, left: 40})
+                .dimension(yearDim)
+                .x(d3.scale.linear().domain([d3.min(data, function(d) {return d.Year -0.5;}),
+                                             d3.max(data, function(d) {return d.Year +0.5;})]))
+                .group(grossByYearGroup,"Gross by Year")
+                .elasticY(true)
+                .centerBar(true)
+                .gap(1)
+                .renderHorizontalGridLines(true)
+                .brushOn(false)
+                .xAxis().tickFormat(d3.format("d"));
+        
+        var genreDim = facts.dimension(function(d){
+            return d.Genre;
+        });
+        
+        var grossByGenreGroup = genreDim.group().reduceSum(function(d){
+            return d.Worldwide_Gross_M;
+        });
+        
+        barChart2.width(500)
+                .height(400)
+                .margins({top: 50, right: 15, bottom: 25, left: 40})
+                .dimension(genreDim)
+                .x(d3.scale.ordinal().domain(data.map(function (d) {return d.Genre; })))
+                .xUnits(dc.units.ordinal)
+                .group(grossByGenreGroup,"Gross by Genre")
+                .elasticY(true)
+                .gap(1)
+                .renderHorizontalGridLines(true)
+                .brushOn(false);
+        
+
+        dc.renderAll();
+    });
+	</script>			
+</body>
+</html>
