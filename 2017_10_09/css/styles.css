@@ -1,5 +1,6 @@
 body {
-    font-family: "helvetica"
+    font-family: "helvetica";
+    margin-top: -45px;
 }
 
 h4 span {
@@ -16,7 +17,7 @@ h2 span {
     font-weight:normal;
 }
 
-#mapid {
+#map {
     width: 650px;
     height: 450px;
 }
