@@ -1,0 +1,43 @@
+body {
+    font-family: "helvetica";
+    margin-top: -45px;
+}
+
+.container-fluid {
+    margin: 0;
+    text-align: center;
+}
+
+.container-fluid > div {
+    margin: auto;
+    width:100%;
+}
+
+h4 {
+    margin-top:50px;
+    margin-bottom:0px;
+}
+  
+h2 {
+    float: right;
+  }
+  
+h2 span {
+    font-size:14px;
+    font-weight:normal;
+}
+
+#map {
+    width: 650px;
+    height: 450px;
+}
+
+#crime-type-chart {
+    margin: 20px auto;
+    margin-bottom:60px;
+}
+
+#day-type-chart {
+    margin: 20px auto;
+    margin-left:-20px;
+}
