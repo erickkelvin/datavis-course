@@ -1,8 +1,11 @@
 $(document).ready(function () {
     $('.activeable').click(function(e) {
-        $('.activeable').removeClass('active');
         if (!$(this).hasClass('active')) {
+            $('.activeable').removeClass('active');
             $(this).addClass('active');
+        }
+        else {
+            $('.activeable').removeClass('active');
         }
         //e.preventDefault();
     });
